@@ -1,0 +1,102 @@
+#!/bin/bash
+
+function lw_echo() {
+	printf '%s\n' "$1"
+}
+
+# 说明
+echo $0
+
+#echo "参数1: 遍历的对象"
+#echo $1
+#echo
+#echo "参数2: 执行的工作"
+#echo $2
+
+# 实现
+n=0;
+# for dev in $( eval $1 ); do echo "$n branch:"$dev; let n++; done
+
+cycle=1
+while [ $cycle -gt 0 ]; do
+	line=0
+	objects=""
+	echo
+	lw_echo "# 请输入遍历的对象，多行程式结束时请输入end"
+	while [ 1 ]; do
+		printf '%02d: ' $line; let line++;
+		read -r cmd
+		if [ x"$cmd" = xend ];then
+			break
+		fi
+		objects+="$cmd"$'\n'
+	done
+
+	lw_echo "# 遍历对象信息如下："
+	#printf '%s\n' "$objects"
+	echo
+	eval $objects
+	echo ""
+	
+	cycle=2
+	while [ $cycle -gt 1 ]; do
+		lw_echo "# 确认对象请按Enter，否则按n"
+		read -r -n 1 key
+		if [ x$key = x ];then
+			cycle=0
+		elif [ x$key = xn ];then
+			cycle=1
+		fi
+	done
+done
+
+
+lw_echo "遍历对象已确认，后续可通过$o获取逐个对象"
+
+cycle=1
+while [ $cycle -gt 0 ]; do
+	line=0
+	work=""
+	echo
+	lw_echo "# 请输入执行动作，多行程式结束时请输入end"
+	while [ 1 ]; do
+		printf '%02d: ' $line; let line++;
+		read -r _w
+		if [ x"$_w" = xend ];then
+			break
+		fi
+		work+="$_w"";"$'\n'
+	done
+	lw_echo "# 执行动作如下："
+	echo $work
+	echo ""
+	
+	cycle=2
+	while [ $cycle -gt 1 ]; do
+		lw_echo "# 确认动作请按Enter，否则按n"
+		read -r -n 1 key
+		if [ x$key = x ];then
+			cycle=0
+		elif [ x$key = xn ];then
+			cycle=1
+		fi
+	done
+done
+
+lw_echo "===================================================="
+lw_echo "开始对遍历对象执行动作"
+lw_echo "===================================================="
+for o in $( eval $objects ); do eval $work; done
+
+
+
+
+
+
+
+
+
+
+
+
+
